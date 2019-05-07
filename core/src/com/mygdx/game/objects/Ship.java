@@ -9,7 +9,7 @@ import com.mygdx.game.Controls;
 public class Ship {
 
     enum State {
-        IDLE, LEFT, RIGHT, SHOOT;
+        IDLE, LEFT, RIGHT, SHOOT,DYING, DEAD;
     }
 
     Vector2 position;
@@ -19,6 +19,7 @@ public class Ship {
     float speed = 5;
 
     TextureRegion frame;
+    TextureRegion hearth;
 
     Weapon weapon;
 
@@ -45,10 +46,14 @@ public class Ship {
             case SHOOT:
                 frame = assets.naveshoot.getKeyFrame(stateTime, true);
                 break;
+            case DYING:
+                frame = assets.shipcrash.getKeyFrame(stateTime, true);
             default:
                 frame = assets.naveidle.getKeyFrame(stateTime, true);
                 break;
         }
+//        TODO: SEGUIR CON LAS TEXTURAS DE LA VIDA Y AÑADIR LA MUERTE Y QUE RESTE LAS VIDAS.
+//        switch ()
     }
 
     void render(SpriteBatch batch){
@@ -76,6 +81,20 @@ public class Ship {
         setFrame(assets);
 
         weapon.update(delta, assets);
+
+        if(state == state.IDLE ) {
+            frame = assets.naveidle.getKeyFrame(stateTime, true);
+        } else if(state == state.DYING){
+            frame = assets.shipcrash.getKeyFrame(stateTime, false);
+        }
+
+        if(state == state.DYING){
+            if(assets.shipcrash.isAnimationFinished(stateTime)){
+                state = state.DEAD;
+            }
+        }
+
+
     }
 
     void idle(){
