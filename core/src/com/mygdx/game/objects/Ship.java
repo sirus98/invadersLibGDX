@@ -18,9 +18,10 @@ public class Ship {
     float stateTime;
     float speed = 5;
     int points=0;
+    int lives = 2;
 
-    TextureRegion frame;
-    TextureRegion hearth;
+    TextureRegion frame, hearth, over;
+
 
     Weapon weapon;
 
@@ -49,55 +50,74 @@ public class Ship {
                 break;
             case DYING:
                 frame = assets.shipcrash.getKeyFrame(stateTime, true);
+                break;
             default:
                 frame = assets.naveidle.getKeyFrame(stateTime, true);
                 break;
         }
-//        TODO: SEGUIR CON LAS TEXTURAS DE LA VIDA Y AÑADIR LA MUERTE Y QUE RESTE LAS VIDAS.
-//        switch ()
+
+        switch (lives){
+            case 2:
+                hearth = assets.hearth.getKeyFrame(0, false);
+                System.out.println(lives);
+                break;
+            case 1:
+                hearth = assets.hearth.getKeyFrame(1, false);
+                System.out.println(lives);
+                break;
+        }
     }
 
     void render(SpriteBatch batch){
         batch.draw(frame, position.x, position.y);
 
         weapon.render(batch);
+
+        batch.draw(hearth, 10, 230);
     }
 
     public void update(float delta, Assets assets) {
         stateTime += delta;
 
-        if(Controls.isLeftPressed()){
-            moveLeft();
-        } else if(Controls.isRightPressed()){
-            moveRight();
-        } else {
-            idle();
-        }
+        System.out.println(state);
+        switch (state){
+            case IDLE:
+            case RIGHT:
+            case LEFT:
+            case SHOOT:
+                if (Controls.isLeftPressed()) {
+                    setState(State.LEFT);
+                    moveLeft();
+                } else if (Controls.isRightPressed()) {
+                    setState(State.RIGHT);
+                    moveRight();
+                } else {
+                    setState(State.IDLE);
+                }
 
-        if(Controls.isShootPressed()) {
-            shoot();
-            assets.shootSound.play();
+                if (Controls.isShootPressed()) {
+                    setState(State.SHOOT);
+                    shoot();
+                    assets.shootSound.play();
+                }
+                break;
+            case DYING:
+                if(assets.shipcrash.isAnimationFinished(stateTime)){
+                    setState(State.DEAD);
+                    assets.aliendieSound.play();
+                }
+                break;
         }
-
         setFrame(assets);
-
         weapon.update(delta, assets);
-
-        if(state == state.IDLE ) {
-            frame = assets.naveidle.getKeyFrame(stateTime, true);
-        } else if(state == state.DYING){
-            frame = assets.shipcrash.getKeyFrame(stateTime, false);
-        }
-
-        if(state == state.DYING){
-            if(assets.shipcrash.isAnimationFinished(stateTime)){
-                state = state.DEAD;
-            }
-        }
 
 
     }
 
+    private void setState(State state) {
+        this.state = state;
+        stateTime = 0;
+    }
     void idle(){
         state = State.IDLE;
     }
@@ -118,6 +138,9 @@ public class Ship {
     }
 
     public void damage() {
-
+        lives -= 1;
+        if (lives == 0) {
+            setState(State.DYING);
+        }
     }
 }

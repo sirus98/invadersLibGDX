@@ -40,6 +40,12 @@ public class GameScreen extends SpaceInvadersScreen {
         spriteBatch.setProjectionMatrix(camera.combined);
 
         world.render(delta, spriteBatch, assets);
+        if(world.gameOver){
+            game.setScreen(new GameOverScreen(game));
+        }
+        if (world.winner){
+            game.setScreen(new WinnerScreen(game));
+        }
     }
 
     @Override

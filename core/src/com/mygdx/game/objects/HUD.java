@@ -20,8 +20,6 @@ public class HUD {
 //        bitmapFont.draw(batch, "Vidas: " + ship.life, 300, 20);
         bitmapFont.draw(batch, "Score: " + ship.points, 300, 50);
         bitmapFont.draw(batch, "Level: " + alienArmy.levelArmy, 300, 20);
-        if (alienArmy.gameOver) {
-            bitmapFont.draw(batch, "WINNER !!", 150, 150);
-        }
+
     }
 }

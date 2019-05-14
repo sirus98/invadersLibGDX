@@ -32,7 +32,7 @@ public class Assets extends AssetManager {
 
     void loadAnimations(){
         space = new Animation<TextureRegion>(1f, atlas.findRegions("space"));
-        shipcrash = new Animation<TextureRegion>(0.05f, atlas.findRegions("navecrash"));
+        shipcrash = new Animation<TextureRegion>(0.3f, atlas.findRegions("navecrash"));
         hearth =  new Animation<TextureRegion>(0.05f, atlas.findRegions("life"));
         alien = new Animation<TextureRegion>(0.4f, atlas.findRegions("alien"));
         aliendie = new Animation<TextureRegion>(0.05f, atlas.findRegions("aliendie"));

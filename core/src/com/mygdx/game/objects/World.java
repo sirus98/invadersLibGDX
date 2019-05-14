@@ -12,6 +12,8 @@ public class World {
     HUD hud;
 
     int WORLD_WIDTH, WORLD_HEIGHT;
+    public boolean gameOver = false;
+    public boolean winner = false;
 
     public World(int WORLD_WIDTH, int WORLD_HEIGHT){
         this.WORLD_WIDTH = WORLD_WIDTH;
@@ -30,17 +32,28 @@ public class World {
         batch.begin();
         space.render(batch);
         ship.render(batch);
-        alienArmy.render(batch);
         hud.render(batch);
+        alienArmy.render(batch);
         batch.end();
     }
 
     void update(float delta, Assets assets){
+        checkGameOver();
+        checkWinner(alienArmy.winner);
+
         space.update(delta, assets);
         ship.update(delta, assets);
         alienArmy.update(delta, assets);
 
         checkCollisions(assets);
+    }
+    private void checkGameOver() {
+        if(ship.state == Ship.State.DEAD){
+            gameOver = true;
+        }
+    }
+    void checkWinner(boolean winner){
+        this.winner = winner;
     }
 
     private void checkCollisions(Assets assets) {
@@ -62,6 +75,7 @@ public class World {
             }
         }
     }
+
 
     private void checkShootsToAlien(Assets assets) {
         for(Shoot shoot: ship.weapon.shoots){
