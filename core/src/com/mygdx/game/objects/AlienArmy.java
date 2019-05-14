@@ -17,6 +17,11 @@ public class AlienArmy {
     Array<Alien> aliens;
     Array<AlienShoot> shoots;
 
+    int levelArmy = 1;
+    boolean gameOver = false;
+    float moveTimerLimit = 0.8f;
+    private int WORLD_HEIGHT;
+
     Timer moveTimer, shootTimer;
     Random random = new Random();
 
@@ -26,6 +31,8 @@ public class AlienArmy {
         this.y = WORLD_HEIGHT-30;
         this.maxX = 60;
         this.yAlien = y;
+
+        this.WORLD_HEIGHT = WORLD_HEIGHT;
 
         aliens = new Array<Alien>();
         shoots = new Array<AlienShoot>();
@@ -70,12 +77,11 @@ public class AlienArmy {
 
     void positionAliens(){
         for (int i = 0; i < 5; i++) {  // fila
-            for (int j = 0; j < 11; j++) {  // columna
+            for (int j = 0; j < 1; j++) {  // columna
                 aliens.add(new Alien(j*30 + 10, y - i*12));
             }
         }
     }
-
 
     void move() {
         System.out.println(x + "  " + speed);
@@ -117,6 +123,30 @@ public class AlienArmy {
 
             shootTimer.set(random.nextFloat()%5+1);
         }
+
+        if (aliens.size <= 0) {
+            nextlvl();
+        }
+    }
+
+    void nextlvl(){
+        aliens.clear();
+        positionAliens();
+        levelArmy++;
+        x = 0;  // reset posición de aliens
+        this.y = WORLD_HEIGHT-30;   // reset posición de aliens
+        if (levelArmy > 5) {
+            finish();
+        } else {
+            moveTimerLimit *= 0.7f;
+            moveTimer = new Timer(moveTimerLimit);
+        }
+
+    }
+    private void finish() {
+        aliens.clear();
+        gameOver = true;
+        // congelar pantalla -- cerrar
     }
 
     private void removeDeadAliens() {

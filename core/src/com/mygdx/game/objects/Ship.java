@@ -17,6 +17,7 @@ public class Ship {
     State state;
     float stateTime;
     float speed = 5;
+    int points=0;
 
     TextureRegion frame;
     TextureRegion hearth;

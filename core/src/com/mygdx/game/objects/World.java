@@ -9,6 +9,7 @@ public class World {
     Space space;
     Ship ship;
     AlienArmy alienArmy;
+    HUD hud;
 
     int WORLD_WIDTH, WORLD_HEIGHT;
 
@@ -19,6 +20,7 @@ public class World {
         space = new Space();
         ship = new Ship(WORLD_WIDTH/2);
         alienArmy = new AlienArmy(WORLD_WIDTH, WORLD_HEIGHT);
+        hud = new HUD(ship, alienArmy);
     }
 
     public void render(float delta, SpriteBatch batch, Assets assets){
@@ -29,6 +31,7 @@ public class World {
         space.render(batch);
         ship.render(batch);
         alienArmy.render(batch);
+        hud.render(batch);
         batch.end();
     }
 
@@ -71,6 +74,7 @@ public class World {
                         alien.kill();
                         shoot.remove();
                         assets.aliendieSound.play();
+                        ship.points = ship.points+75;
                     }
                 }
             }
